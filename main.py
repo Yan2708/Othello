@@ -67,8 +67,8 @@ def play(font: 'pygame.font.Font'):
             match.set_moves()
             Utils.DrawBoard(surface, match.board, match.moves)
             pygame.display.update()
-            if not match.isfinished:
-                if match.board.isfull() or not match.board.have(match.current.color):
+            if not match.isfinished :
+                if match.board.isfull() or not match.board.have(match.current.color) or match.turns_nb == 60:
                     match.isfinished = True
                     continue
                 if len(match.moves) > 0:
