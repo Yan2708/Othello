@@ -102,7 +102,7 @@ def removePause(r=False):
     restart = r
     pause_menu.disable()
 
-
+#TODO: Why Yann ?
 def returnFunc():
     global returning
     returning = True
