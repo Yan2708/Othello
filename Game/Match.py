@@ -25,8 +25,8 @@ class Match:
                 self.current = Bot(False)
                 self.next = Bot(True)
             case 2:
-                self.current = Bot(not color)
-                self.next = Real(color)
+                self.current = Bot(not color) if color else Real(color)
+                self.next = Real(color) if color else Bot(not color)
             case 3:
                 self.current = Real(False)
                 self.next = Real(True)

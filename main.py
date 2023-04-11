@@ -13,7 +13,7 @@ from typing import Optional
 from GUI.utils import Utils
 from Game.Match import Match
 
-GM = 1
+GM = 2
 COLOR = False
 
 is_paused = False
@@ -119,8 +119,8 @@ main_menu = pygame_menu.Menu('Othello', 1280, 720,
                              theme=pygame_menu.themes.THEME_DARK)
 
 main_menu.add.button('Play', play, pygame.font.Font(pygame_menu.font.FONT_FRANCHISE, 30))
-main_menu.add.selector('Game mode ', [('Bot vs Bot', 1), ('P1 vs Bot', 2), ('P1 vs P2', 3)], onchange=set_gm)
-main_menu.add.selector('Color (P1) ', [('Black', False), ('White', True)], onchange=set_color)
+main_menu.add.selector('Game mode ', [('Bot vs Bot', 1), ('P1 vs Bot', 2), ('P1 vs P2', 3)], onchange=set_gm, default=1)
+main_menu.add.selector('Color (P1) ', [('Black', False), ('White', True)], onchange=set_color, default=0)
 main_menu.add.button('Quit', pygame_menu.events.EXIT)
 # pause menu
 pause_menu = pygame_menu.Menu('Pause', 1280, 720, theme=pygame_menu.themes.THEME_DARK)

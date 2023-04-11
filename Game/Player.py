@@ -38,9 +38,9 @@ class Real(Player):
             event = pygame.event.wait()
             if event.type == pygame.QUIT:
                 pygame.quit()
-            # elif event.type == pygame.KEYDOWN:
-            #     if event.key == pygame.K_ESCAPE:
-            #         return event.key
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    return event.key
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 coord = ((mouse_pos[1] - board_y) // 50, (mouse_pos[0] - board_x) // 50)
