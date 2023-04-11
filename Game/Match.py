@@ -18,8 +18,12 @@ class Match:
         self.isfinished = False
         self.initplayer(gm, color)
         self.moves = None
+        #NEW
+        self.state = None
+        #TODO: incrémanter
+        self.turns_nb = 0 #MAX 60
 
-    def initplayer(self, gm, color):
+    def initplayer(self,gm,color):
         match gm:
             case 1:
                 self.current = Bot(False)
@@ -34,13 +38,18 @@ class Match:
                 pass
 
     def switchplayer(self):
-        tmp = self.current
-        self.current = self.next
-        self.next = tmp
-
+        self.current, self.next = self.next,self.current
+        """ 
+       print(self.board.status)
+       print(" Player 1 => colors: ",self.current.color," =>",self.board.status.count(self.current.color),"\n","Player 2 => colors: ",self.next.color," =>",self.board.status.count(self.next.color))
+       """ 
     def set_moves(self):
         self.moves = Rules.movespossible(self.board, self.current.color)
 
     def set_flip(self,coord):
         self.toflip=Rules.getflippeddisk(self.board,coord[0],coord[1],self.current.color)
+    
+    # TODO get_winner
+    #def get_winner(self):
+        
 

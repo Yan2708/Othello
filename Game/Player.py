@@ -21,6 +21,8 @@ class Player(ABC):
 class Bot(Player):
     def __init__(self, color):
         super().__init__(color)
+        #TODO: Set strategie
+        self.strategy=None
 
     def play(self, moves):
         return moves[0]
@@ -29,7 +31,8 @@ class Bot(Player):
 class Real(Player):
     def __init__(self, color):
         super().__init__(color)
-
+    
+    #TODO: to Yann, bof c'est de la vue ça devrais etre dans le main non ?
     def play(self, moves):
         # Calcul de la position de l'échiquier pour le centrer sur l'écran
         board_x = (Utils.WINDOW_SIZE[0] - Utils.square_size * 8) // 2

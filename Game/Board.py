@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on Sun Apr  2 15:59:11 2023
 
@@ -15,9 +14,11 @@ class Board:
 
     def initboard(self):
         b = [[None for _ in range(Board.BOARD_SIZE)] for _ in range(Board.BOARD_SIZE)]
+        #WHY ?
         b[3][3], b[4][4], b[3][4], b[4][3] = True, True, False, False
         self.status = b
-
+    
+    #Place un pion + flip
     def change(self, x, y, p):
         self.status[x][y] = p
         for i in range(-1, 2):
@@ -43,7 +44,8 @@ class Board:
                 if size and size > 0:
                     return True
         return False
-
+    
+    #TODO: Yann explained AIM 1?
     @staticmethod
     def vectorsize(board, vector, x, y, p):
         d = 0
@@ -60,10 +62,10 @@ class Board:
     def isfull(self):
         for i in range(Board.BOARD_SIZE):
             for j in range(Board.BOARD_SIZE):
-                if self.status[i][j] is None:
-                    return False
+                if self.status[i][j] is None: return False
         return True
-
+    
+    #TODO: Yann explained AIM 2?
     def have(self, color):
         for i in range(Board.BOARD_SIZE):
             for j in range(Board.BOARD_SIZE):
