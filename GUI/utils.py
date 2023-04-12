@@ -45,11 +45,3 @@ class Utils:
                 x = board_x + x * Utils.square_size
                 y = board_y + y * Utils.square_size
                 pygame.draw.circle(surface, Utils.grey, (x + 25, y + 25), 5)
-        # # Dessin des lignes de quadrillage
-        # for i in range(9):
-        #     # Lignes verticales
-        #     pygame.draw.line(surface, Utils.black, (board_x + i * Utils.square_size, board_y-1),
-        #                      (board_x + i * Utils.square_size, board_y + 8 * Utils.square_size),2)
-        #     # Lignes horizontales
-        #     pygame.draw.line(surface, Utils.black, (board_x-1, board_y + i * Utils.square_size),
-        #                      (board_x + 8 * Utils.square_size, board_y + i * Utils.square_size),2)

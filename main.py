@@ -12,7 +12,7 @@ from typing import Optional
 from GUI.utils import Utils
 from Game.Match import Match
 
-GM = 1
+GM = 2
 COLOR = False
 
 is_paused = False
@@ -43,9 +43,8 @@ def play(font: 'pygame.font.Font'):
     font_2 = pygame.font.SysFont("Raleway", 40)
     txt = font.render("SCORES", True, Utils.black)
     Blk_Nb = Wht_Nb = 2
-    Blk_txt,Wht_txt =font_2.render(str(Blk_Nb), True, Utils.black),font_2.render(str(Wht_Nb), True, Utils.black)
-    
-    
+    Blk_txt, Wht_txt = font_2.render(str(Blk_Nb), True, Utils.black), font_2.render(str(Wht_Nb), True, Utils.black)
+
     match = Match(GM, COLOR)
     # Boucle de jeu
     surface.fill(Utils.black)
@@ -66,24 +65,25 @@ def play(font: 'pygame.font.Font'):
             restart = False
             match = Match(GM, COLOR)
             Blk_Nb = Wht_Nb = 2
-            Blk_txt,Wht_txt =font_2.render(str(Blk_Nb), True, Utils.black),font_2.render(str(Wht_Nb), True, Utils.black)
+            Blk_txt, Wht_txt = font_2.render(str(Blk_Nb), True, Utils.black), font_2.render(str(Wht_Nb), True,
+                                                                                            Utils.black)
             pygame.display.flip()
             continue
 
-        # Si le jeu n'est pas en pause, on fait les traitements de jeu normalement
+        # Si le jeu n'est pas en pause
         if not is_paused:
             # Scores display Part
             surface.fill(Utils.gainsboro)
-            surface.blit(txt,(170,160))
-            surface.blit(Utils.disk[0], (195,260))
-            surface.blit(Utils.disk[4], (195,360))
-            surface.blit(Blk_txt, (290,270))
-            surface.blit(Wht_txt, (290,375))
-            
+            surface.blit(txt, (170, 160))
+            surface.blit(Utils.disk[0], (195, 260))
+            surface.blit(Utils.disk[4], (195, 360))
+            surface.blit(Blk_txt, (290, 270))
+            surface.blit(Wht_txt, (290, 375))
+
             match.set_moves()
             Utils.DrawBoard(surface, match.board, match.moves)
             pygame.display.update()
-            if not match.isfinished :
+            if not match.isfinished:
                 if match.board.isfull() or not match.board.have(match.current.color) or match.turns_nb == 60:
                     match.isfinished = True
                     continue
@@ -93,8 +93,9 @@ def play(font: 'pygame.font.Font'):
                         is_paused = not is_paused
                         continue
                     match.board.change(coord[0], coord[1], match.current.color)
-                    Wht_Nb,Blk_Nb = match.count_pawns()
-                    Blk_txt, Wht_txt = font_2.render(str(Blk_Nb), True, Utils.black),font_2.render(str(Wht_Nb), True, Utils.black)
+                    Wht_Nb, Blk_Nb = match.count_pawns()
+                    Blk_txt, Wht_txt = font_2.render(str(Blk_Nb), True, Utils.black), font_2.render(str(Wht_Nb), True,
+                                                                                                    Utils.black)
                     pause_menu.enable()
                     pygame.display.flip()
                 else:
@@ -104,7 +105,7 @@ def play(font: 'pygame.font.Font'):
                 surface.fill(Utils.black)
                 print('finish')
 
-        # Afficher le menu de pause ou le menu principal
+        # Afficher le menu de pause
         if is_paused:
             pause_menu.mainloop(surface)
 
@@ -121,6 +122,7 @@ def removePause(r=False):
     restart = r
     pause_menu.disable()
 
+
 def returnFunc():
     global returning
     returning = True
@@ -133,16 +135,16 @@ pygame.display.set_caption('Othello')
 icon = pygame.image.load('Asset/icon.png')
 pygame.display.set_icon(icon)
 
+# main menu
 main_menu = pygame_menu.Menu('Othello', 1280, 720,
                              theme=pygame_menu.themes.THEME_DARK)
 
 main_menu.add.button('Play', play, pygame.font.Font(pygame_menu.font.FONT_FRANCHISE, 30))
-main_menu.add.selector('Game mode ', [('Bot vs Bot', 1), ('P1 vs Bot', 2), ('P1 vs P2', 3)], onchange=set_gm)
+main_menu.add.selector('Game mode ', [('Bot vs Bot', 1), ('P1 vs Bot', 2), ('P1 vs P2', 3)], onchange=set_gm, default=1)
 main_menu.add.selector('Color (P1) ', [('Black', False), ('White', True)], onchange=set_color)
 main_menu.add.button('Quit', pygame_menu.events.EXIT)
 # pause menu
 pause_menu = pygame_menu.Menu('Pause', 1280, 720, theme=pygame_menu.themes.THEME_DARK)
-# faire restart
 pause_menu.add.button('Continue', removePause)
 pause_menu.add.button('Restart', removePause, True)
 pause_menu.add.button('Main menu', returnFunc)
