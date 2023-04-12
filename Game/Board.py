@@ -14,7 +14,6 @@ class Board:
 
     def initboard(self):
         b = [[None for _ in range(Board.BOARD_SIZE)] for _ in range(Board.BOARD_SIZE)]
-        #WHY ?
         b[3][3], b[4][4], b[3][4], b[4][3] = True, True, False, False
         self.status = b
     
@@ -45,7 +44,6 @@ class Board:
                     return True
         return False
     
-    #TODO: Yann explained AIM 1?
     @staticmethod
     def vectorsize(board, vector, x, y, p):
         d = 0
@@ -65,7 +63,6 @@ class Board:
                 if self.status[i][j] is None: return False
         return True
     
-    #TODO: Yann explained AIM 2?
     def have(self, color):
         for i in range(Board.BOARD_SIZE):
             for j in range(Board.BOARD_SIZE):
