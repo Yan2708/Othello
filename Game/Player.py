@@ -32,7 +32,6 @@ class Real(Player):
     def __init__(self, color):
         super().__init__(color)
     
-    #TODO: to Yann, bof c'est de la vue ça devrais etre dans le main non ?
     def play(self, moves):
         # Calcul de la position de l'échiquier pour le centrer sur l'écran
         board_x = (Utils.WINDOW_SIZE[0] - Utils.square_size * 8) // 2
@@ -41,9 +40,9 @@ class Real(Player):
             event = pygame.event.wait()
             if event.type == pygame.QUIT:
                 pygame.quit()
-            # elif event.type == pygame.KEYDOWN:
-            #     if event.key == pygame.K_ESCAPE:
-            #         return event.key
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    return event.key
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 coord = ((mouse_pos[1] - board_y) // 50, (mouse_pos[0] - board_x) // 50)
