@@ -16,6 +16,7 @@ class Utils:
     beige = (245, 230, 200)
     blue = (28, 118, 206)
     grey = (46, 46, 46)
+    gainsboro = (220,220,220)
     square_size = 50
     WINDOW_SIZE = (1280, 720)
     disk = [pygame.image.load('./Asset/disk/disk0.png'), pygame.image.load('./Asset/disk/disk1.png'),

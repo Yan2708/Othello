@@ -39,15 +39,16 @@ class Match:
 
     def switchplayer(self):
         self.current, self.next = self.next,self.current
-        """ 
-       print(self.board.status)
-       print(" Player 1 => colors: ",self.current.color," =>",self.board.status.count(self.current.color),"\n","Player 2 => colors: ",self.next.color," =>",self.board.status.count(self.next.color))
-       """ 
+       
+       
     def set_moves(self):
         self.moves = Rules.movespossible(self.board, self.current.color)
 
     def set_flip(self,coord):
         self.toflip=Rules.getflippeddisk(self.board,coord[0],coord[1],self.current.color)
+        
+    def count_pawns(self):
+        return sum(line.count(True) for line in self.board.status),sum(line.count(False) for line in self.board.status)
     
     # TODO get_winner
     #def get_winner(self):

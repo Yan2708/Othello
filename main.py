@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on Sun Apr  2 12:17:38 2023
 
@@ -39,6 +38,14 @@ def set_color(value, gm):
 def play(font: 'pygame.font.Font'):
     # init
     global is_paused, returning, restart, GM, COLOR
+    # Scores set init
+    font = pygame.font.SysFont("Montserrat", 40)
+    font_2 = pygame.font.SysFont("Raleway", 40)
+    txt = font.render("SCORES", True, Utils.black)
+    Blk_Nb = Wht_Nb = 2
+    Blk_txt,Wht_txt =font_2.render(str(Blk_Nb), True, Utils.black),font_2.render(str(Wht_Nb), True, Utils.black)
+    
+    
     match = Match(GM, COLOR)
     # Boucle de jeu
     surface.fill(Utils.black)
@@ -58,12 +65,21 @@ def play(font: 'pygame.font.Font'):
         if restart:
             restart = False
             match = Match(GM, COLOR)
-            pygame.display.update()
+            Blk_Nb = Wht_Nb = 2
+            Blk_txt,Wht_txt =font_2.render(str(Blk_Nb), True, Utils.black),font_2.render(str(Wht_Nb), True, Utils.black)
+            pygame.display.flip()
             continue
 
         # Si le jeu n'est pas en pause, on fait les traitements de jeu normalement
         if not is_paused:
-            surface.fill(Utils.black)
+            # Scores display Part
+            surface.fill(Utils.gainsboro)
+            surface.blit(txt,(170,160))
+            surface.blit(Utils.disk[0], (195,260))
+            surface.blit(Utils.disk[4], (195,360))
+            surface.blit(Blk_txt, (290,270))
+            surface.blit(Wht_txt, (290,375))
+            
             match.set_moves()
             Utils.DrawBoard(surface, match.board, match.moves)
             pygame.display.update()
@@ -75,9 +91,12 @@ def play(font: 'pygame.font.Font'):
                     coord = match.current.play(match.moves)
                     if isinstance(coord, int) and coord == pygame.K_ESCAPE:
                         is_paused = not is_paused
-                        pause_menu.enable()
                         continue
                     match.board.change(coord[0], coord[1], match.current.color)
+                    Wht_Nb,Blk_Nb = match.count_pawns()
+                    Blk_txt, Wht_txt = font_2.render(str(Blk_Nb), True, Utils.black),font_2.render(str(Wht_Nb), True, Utils.black)
+                    pause_menu.enable()
+                    pygame.display.flip()
                 else:
                     print('pass')
                 match.switchplayer()
@@ -102,7 +121,6 @@ def removePause(r=False):
     restart = r
     pause_menu.disable()
 
-#TODO: Why Yann ?
 def returnFunc():
     global returning
     returning = True
