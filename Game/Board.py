@@ -69,6 +69,12 @@ class Board:
                 if self.status[i][j] == color:
                     return True
         return False
+    
+    def get_black_pawns_nb(self):
+        return sum(line.count(False) for line in self.status)
+    
+    def get_white_pawns_nb(self):
+        return sum(line.count(True) for line in self.status)
 
     def __str__(self):
         return '\n'.join([str(i) for i in self.status])

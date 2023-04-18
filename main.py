@@ -13,6 +13,7 @@ from typing import Optional
 from GUI.utils import Utils
 from Game.Match import Match
 
+
 GM = 2
 COLOR = False
 

@@ -7,7 +7,7 @@ Created on Mon Apr  3 20:35:15 2023
 import pygame
 from abc import ABC, abstractmethod
 from GUI.utils import Utils
-
+from AI.AI_Player import Strategy
 
 class Player(ABC):
     def __init__(self, color):
@@ -19,10 +19,11 @@ class Player(ABC):
 
 
 class Bot(Player):
-    def __init__(self, color):
+    def __init__(self,color,board):
         super().__init__(color)
         #TODO: Set strategie
-        self.strategy=None
+        self.board = board
+        self.strategy= Strategy(color,4,0.5,0.2,0.3)
 
     def play(self, moves):
         return moves[0]

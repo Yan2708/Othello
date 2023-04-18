@@ -47,7 +47,7 @@ class Match:
         self.toflip=Rules.getflippeddisk(self.board,coord[0],coord[1],self.current.color)
         
     def count_pawns(self):
-        return sum(line.count(True) for line in self.board.status),sum(line.count(False) for line in self.board.status)
+        return self.board.get_white_pawns_nb(),self.board.get_black_pawns_nb()
     
     # TODO get_winner
     #def get_winner(self):
