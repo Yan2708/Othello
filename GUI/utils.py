@@ -19,9 +19,16 @@ class Utils:
     gainsboro = (220,220,220)
     square_size = 50
     WINDOW_SIZE = (1280, 720)
-    disk = [pygame.image.load('./Asset/disk/disk0.png'), pygame.image.load('./Asset/disk/disk1.png'),
-            pygame.image.load('./Asset/disk/disk2.png'), pygame.image.load('./Asset/disk/disk3.png'),
-            pygame.image.load('./Asset/disk/disk4.png')]
+    
+    try:
+        disk = [pygame.image.load('./Asset/disk/disk0.png'), pygame.image.load('./Asset/disk/disk1.png'),
+                pygame.image.load('./Asset/disk/disk2.png'), pygame.image.load('./Asset/disk/disk3.png'),
+                pygame.image.load('./Asset/disk/disk4.png')]
+    except Exception:
+        disk = [pygame.image.load('../Asset/disk/disk0.png'), pygame.image.load('../Asset/disk/disk1.png'),
+                pygame.image.load('../Asset/disk/disk2.png'), pygame.image.load('../Asset/disk/disk3.png'),
+                pygame.image.load('../Asset/disk/disk4.png')]
+    
 
     def DrawBoard(surface, board, moves):
         # Calcul de la position de l'échiquier pour le centrer sur l'écran

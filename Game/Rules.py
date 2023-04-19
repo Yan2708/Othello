@@ -21,6 +21,7 @@ def checkadjacent(board, x, y, p):
             pass
     return False
 
+#TODO:Mettre dans board ?
 def movespossible(board, p):
     t = []
     for i in range(8):
@@ -29,4 +30,20 @@ def movespossible(board, p):
                 t.append((i, j))
     return t
 
+def is_corner(position):
+    corner = [(0,0),(0,7),(7,7),(7,0)]
+    if position in corner:
+        return True
+    return False
+
+def checkadjacent_for_corner(p):
+    corner = [(0,0),(0,7),(7,7),(7,0)]
+    is_adj = False
+    for t in corner:
+        if t[0] == p[0] and abs(t[1]-p[1]) == 1 or t[1] == p[1] and abs(t[0]-p[0]) == 1:
+            is_adj == True
+        if is_adj:
+            break
+    return is_adj
+    
 

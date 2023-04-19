@@ -11,7 +11,7 @@ class Board:
     def __init__(self):
         self.status = None
         self.initboard()
-
+    
     def initboard(self):
         b = [[None for _ in range(Board.BOARD_SIZE)] for _ in range(Board.BOARD_SIZE)]
         b[3][3], b[4][4], b[3][4], b[4][3] = True, True, False, False

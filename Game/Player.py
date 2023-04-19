@@ -8,6 +8,7 @@ import pygame
 from abc import ABC, abstractmethod
 from GUI.utils import Utils
 from AI.AI_Player import Strategy
+import time
 
 class Player(ABC):
     def __init__(self, color):
@@ -26,7 +27,11 @@ class Bot(Player):
         self.strategy= Strategy(color,4,0.5,0.2,0.3)
 
     def play(self, moves):
-        return moves[0]
+        """print(self.strategy.get_best_move(self.board))
+        print(moves)"""
+        move = self.strategy.get_best_move(self.board)
+        time.sleep(0.5) 
+        return move
 
 
 class Real(Player):

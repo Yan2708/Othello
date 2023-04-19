@@ -25,11 +25,11 @@ class Match:
     def initplayer(self,gm,color):
         match gm:
             case 1:
-                self.current = Bot(False)
-                self.next = Bot(True)
+                self.current = Bot(False,self.board)
+                self.next = Bot(True,self.board)
             case 2:
-                self.current = Bot(not color) if color else Real(color)
-                self.next = Real(color) if color else Bot(not color)
+                self.current = Bot(not color,self.board) if color else Real(color)
+                self.next = Real(color) if color else Bot(not color,self.board)
             case 3:
                 self.current = Real(False)
                 self.next = Real(True)
@@ -39,7 +39,7 @@ class Match:
     def switchplayer(self):
         self.current, self.next = self.next,self.current
        
-       
+     
     def set_moves(self):
         self.moves = Rules.movespossible(self.board, self.current.color)
 
@@ -48,8 +48,5 @@ class Match:
         
     def count_pawns(self):
         return self.board.get_white_pawns_nb(),self.board.get_black_pawns_nb()
-    
-    # TODO get_winner
-    #def get_winner(self):
         
 

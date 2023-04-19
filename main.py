@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sun Apr  2 12:17:38 2023
-
 @author: yniak
 """
 
@@ -12,7 +11,6 @@ from typing import Optional
 
 from GUI.utils import Utils
 from Game.Match import Match
-
 
 GM = 2
 COLOR = False
