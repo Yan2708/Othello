@@ -13,8 +13,8 @@ class Strategy():
     
     @staticmethod
     def evaluate_nb_pawns(board,player):
-        player_pawns_nb = board.get_black_pawns_nb() if player == False else board.get_black_pawns_nb()
-        otherPly_pawns_nb =  board.get_black_pawns_nb() if not player == False else board.get_black_pawns_nb()
+        player_pawns_nb = board.get_pawns_nb(False) if player == False else board.get_pawns_nb(True)
+        otherPly_pawns_nb =  board.get_pawns_nb(False) if not player == False else board.get_pawns_nb(True)
         return player_pawns_nb - otherPly_pawns_nb
     
     @staticmethod

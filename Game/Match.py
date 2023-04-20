@@ -45,7 +45,7 @@ class Match:
         self.moves = Rules.movespossible(self.board, self.current.color)
 
     def count_pawns(self):
-        return self.board.get_paws_nb(True),self.board.get_paws_nb(False)
+        return self.board.get_pawns_nb(True),self.board.get_pawns_nb(False)
         
     # TODO get_winner
     # def get_winner(self):

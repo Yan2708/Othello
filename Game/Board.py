@@ -64,7 +64,7 @@ class Board:
         return color in self.status
 
     def get_pawns_nb(self,color):
-        return np.count_nonzero(self.board.status == color)
+        return np.count_nonzero(self.status == color)
     
     def __str__(self):
         return '\n'.join([str(i) for i in self.status])
