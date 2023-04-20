@@ -4,6 +4,8 @@ Created on Mon Apr  3 20:35:07 2023
 
 @author: yniak
 """
+import numpy as np
+
 from Game import Rules
 from Game.Board import Board
 from Game.Player import Bot, Real
@@ -19,10 +21,10 @@ class Match:
         self.initplayer(gm, color)
         self.moves = None
         self.state = None
-        #TODO: incrémanter
-        self.turns_nb = 0 #MAX 60
+        # TODO: incrémanter
+        self.turns_nb = 0  # MAX 60
 
-    def initplayer(self,gm,color):
+    def initplayer(self, gm, color):
         match gm:
             case 1:
                 self.current = Bot(False,self.board)
@@ -37,16 +39,13 @@ class Match:
                 pass
 
     def switchplayer(self):
-        self.current, self.next = self.next,self.current
-       
-     
+        self.current, self.next = self.next, self.current
+
     def set_moves(self):
         self.moves = Rules.movespossible(self.board, self.current.color)
 
-    def set_flip(self,coord):
-        self.toflip=Rules.getflippeddisk(self.board,coord[0],coord[1],self.current.color)
-        
     def count_pawns(self):
-        return self.board.get_white_pawns_nb(),self.board.get_black_pawns_nb()
+        return self.board.get_paws_nb(True),self.board.get_paws_nb(False)
         
-
+    # TODO get_winner
+    # def get_winner(self):
