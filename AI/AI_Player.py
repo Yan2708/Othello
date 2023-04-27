@@ -38,26 +38,27 @@ class Strategy():
             for y in range(8):
                 current = (x,y)
                 if board.status[x][y] == player:
-                    if Rules.is_corner(current):
+                    if Rules.is_in_corner(current):
                         Sum_strenght += 10
                     elif Rules.checkadjacent_for_corner(current):
                         Sum_strenght -=5
+                    elif Rules.is_in_border(current):
+                        Sum_strenght += 3
                     else:
                         Sum_strenght += 1
                 else:
-                    if Rules.is_corner(current):
+                    if Rules.is_in_corner(current):
                         Sum_strenght -= 10
                     elif Rules.checkadjacent_for_corner(current):
                         Sum_strenght +=5
+                    elif Rules.is_in_border(current):
+                        Sum_strenght -= 3
                     else:
                         Sum_strenght -= 1
         return Sum_strenght
     
-    @staticmethod
-    def simulate_stroke(board,move,player):
-        fake_board = copy.deepcopy(board)
-        fake_board.status[move[0]][move[1]] = player
-        return fake_board
+  
+    
     
 
     def global_evaluate(self,board,player):
@@ -67,40 +68,46 @@ class Strategy():
         return strokes_nb_rate*self.weighting_nb_stroke+pawns_nb_rate*self.weighting_nb_pawns+strenght_rate*self.weighting_position
     
     def alpha_beta_search(self,board,alpha,beta,current_player,depth):
-        
-        if depth == 0 or board.isfull():
+        print(board)
+        if depth == 0 or board.isfull() : #or len(Rules.movespossible(board,current_player))==1:
             return self.global_evaluate(board,current_player)
         
         #Max
         if current_player == self.player_max:
             m = -inf
             for move in Rules.movespossible(board,current_player):
-                new_board = Strategy.simulate_stroke(board,move,current_player)
-                val = self.alpha_beta_search(new_board,alpha,beta,not current_player,depth-1)
+                board.simulate_stroke(move,current_player)
+                val = self.alpha_beta_search(board,alpha,beta,not current_player,depth-1)
+                board.undo_move(move)
                 m = max(m, val)
                 alpha = max(alpha,val)
-                if beta <= alpha :#and alpha != -inf:
+                if beta <= alpha and alpha != -inf:
                     break
             return m
         #Min
         else:
             m = inf
             for move in Rules.movespossible(board,current_player):
-                new_board = Strategy.simulate_stroke(board,move,current_player)
-                val = self.alpha_beta_search(new_board,alpha,beta,not current_player,depth-1)
+                board.simulate_stroke(move,current_player)
+                val = self.alpha_beta_search(board,alpha,beta,not current_player,depth-1)
+                board.undo_move(move)
                 m = min(m, val)
                 beta = min(beta,val)
-                if beta <= alpha :#and beta != inf:
+                if beta <= alpha and beta != inf:
                     break
             return m
-    
+        
+
+        
     def get_best_move(self,state):
         best_score = -inf
         best_move = None
-        for pos in Rules.movespossible(state,self.player_max):
-            fake_state = Strategy.simulate_stroke(state,pos,self.player_max)
+        fake_state = copy.deepcopy(state)
+        for pos in Rules.movespossible(fake_state,self.player_max):
+            fake_state.simulate_stroke(pos,self.player_max)
             score = self.alpha_beta_search(fake_state, -inf, inf, self.player_max, self.depth_max)
             print(pos,"=>",score)
+            fake_state.undo_move(pos)
             if score > best_score:
                 best_score = score
                 best_move = pos

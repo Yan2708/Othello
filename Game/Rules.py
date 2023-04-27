@@ -30,10 +30,17 @@ def movespossible(board, p):
                 t.append((i, j))
     return t
 
-def is_corner(position):
+def is_in_corner(position):
     corner = [(0,0),(0,7),(7,7),(7,0)]
     if position in corner:
         return True
+    return False
+def is_in_border(position):
+    if is_in_corner(position) == False:
+        if position[0] == 0 or position[0] == 7:
+            return True
+        elif position[1] == 0 or position[1] == 7:
+            return True
     return False
 
 def checkadjacent_for_corner(p):
