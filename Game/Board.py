@@ -8,7 +8,7 @@ import numpy as np
 
 class Board:
     BOARD_SIZE = 8
-    DIRECTIONS = [(i, j) for j in range(-1, 2) for i in range(-1, 2) if not (i == 0 == j)]
+    DIRECTIONS = np.array([(i, j) for j in range(-1, 2) for i in range(-1, 2) if not (i == 0 == j)])
 
     def __init__(self):
         self.status = None
@@ -72,41 +72,7 @@ class Board:
     
     def undo_move(self,move):
         self.status[move[0]][move[1]] = None
-    
-    """
-    @staticmethod
-    def simulate_stroke(board,move,player):
-          board.status[move[0]][move[1]] = player
-          
-    @staticmethod
-    def undo_move(board,move):
-        board.status[move[0]][move[1]] = None
 
-     def check_strenght_position(board,player):
-         Sum_strenght = 0
-         for x in range(8):
-             for y in range(8):
-                 current = (x,y)
-                 if board.status[x][y] == player:
-                     if Rules.is_in_corner(current):
-                         Sum_strenght += 10
-                     elif Rules.checkadjacent_for_corner(current):
-                         Sum_strenght -=5
-                     elif Rules.is_in_border(current):
-                         Sum_strenght += 3
-                     else:
-                         Sum_strenght += 1
-                 else:
-                     if Rules.is_in_corner(current):
-                         Sum_strenght -= 10
-                     elif Rules.checkadjacent_for_corner(current):
-                         Sum_strenght +=5
-                     elif Rules.is_in_border(current):
-                         Sum_strenght -= 3
-                     else:
-                         Sum_strenght -= 1
-         return Sum_strenght
-    """
     def get_black_pawns_nb(self):
         return sum(line.count(False) for line in self.status)
     

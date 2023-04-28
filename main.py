@@ -6,9 +6,7 @@ Created on Sun Apr  2 12:17:38 2023
 
 import pygame
 import pygame_menu
-
 from typing import Optional
-
 from GUI.utils import Utils
 from Game.Match import Match
 
@@ -94,6 +92,7 @@ def play(font: 'pygame.font.Font'):
                     if isinstance(coord, int) and coord == pygame.K_ESCAPE:
                         is_paused = not is_paused
                         continue
+                    print("in: ",match.moves," => ",coord[0],coord[1])
                     match.board.change(coord[0], coord[1], match.current.color)
                     Wht_Nb, Blk_Nb = match.count_pawns()
                     Blk_txt, Wht_txt = font_2.render(str(Blk_Nb), True, Utils.black), font_2.render(str(Wht_Nb), True,
@@ -101,8 +100,8 @@ def play(font: 'pygame.font.Font'):
                     pause_menu.enable()
                     pygame.display.flip()
                 else:
-                    #TODO: Pour quand il peut pas jouer ?
                     print('pass')
+                match.turns_nb += 1
                 match.switchplayer()
             else:
                 W = font.render("WHITES WIN THO !", True, Utils.white) 

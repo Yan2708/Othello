@@ -18,20 +18,20 @@ class Match:
         self.current = None
         self.board = Board()
         self.isfinished = False
-        self.initplayer(gm, color)
+        self.turns_nb = 1
         self.moves = None
         self.state = None
-        # TODO: incrémanter
-        self.turns_nb = 0  # MAX 60
+        self.initplayer(gm, color)
+       
 
     def initplayer(self, gm, color):
         match gm:
             case 1:
-                self.current = Bot(False,self.board)
-                self.next = Bot(True,self.board)
+                self.current = Bot(False,self.board,self.turns_nb)
+                self.next = Bot(True,self.board,self.turns_nb)
             case 2:
-                self.current = Bot(not color,self.board) if color else Real(color)
-                self.next = Real(color) if color else Bot(not color,self.board)
+                self.current = Bot(not color,self.board,self.turns_nb) if color else Real(color)
+                self.next = Real(color) if color else Bot(not color,self.board,self.turns_nb)
             case 3:
                 self.current = Real(False)
                 self.next = Real(True)
@@ -46,6 +46,3 @@ class Match:
 
     def count_pawns(self):
         return self.board.get_pawns_nb(True),self.board.get_pawns_nb(False)
-        
-    # TODO get_winner
-    # def get_winner(self):

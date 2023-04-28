@@ -20,17 +20,25 @@ class Player(ABC):
 
 
 class Bot(Player):
-    def __init__(self,color,board):
+    def __init__(self,color,board,turn_nb):
         super().__init__(color)
-        #TODO: Set strategie
+        self.turn_nb = turn_nb
         self.board = board
         self.strategy= Strategy(color,4,0.5,0.2,0.3)
 
     def play(self, moves):
-        """print(self.strategy.get_best_move(self.board))
-        print(moves)"""
+        if self.turn_nb >= 12 and self.turn_nb < 30:
+            self.strategy.set_weighting_nb_pawns(0.2)
+            self.strategy.set_weighting_nb_stroke(0.1)
+            self.strategy.set_weighting_position(0.7)
+        elif self.turn_nb >= 30:
+            self.strategy.set_weighting_nb_pawns(0.8)
+            self.strategy.set_weighting_nb_stroke(0.1)
+            self.strategy.set_weighting_position(0.1)
+            
         move = self.strategy.get_best_move(self.board)
-        time.sleep(0.5) 
+        time.sleep(0.3)
+        print("AI =>", move)
         return move
 
 
