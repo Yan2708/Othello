@@ -12,7 +12,7 @@ def isplayable(board, x, y, p):
 
 
 def checkadjacent(board, x, y, p):
-    positions_adjacentes = np.array([(0, 1), (0, -1), (1, 0), (-1, 0)])
+    positions_adjacentes = np.array([(-1, -1),  (-1, 0),  (-1, 1),  (0, -1),  (0, 1),  (1, -1),  (1, 0),  (1, 1)])
     for i, j in positions_adjacentes:
         try:
             if board.status[x + i][y + j] == p:

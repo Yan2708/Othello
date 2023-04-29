@@ -37,7 +37,6 @@ class Bot(Player):
             self.strategy.set_weighting_position(0.1)
             
         move = self.strategy.get_best_move(self.board)
-        time.sleep(0.3)
         print("AI =>", move)
         return move
 

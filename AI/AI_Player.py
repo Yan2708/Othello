@@ -23,9 +23,7 @@ class Strategy():
     
     @staticmethod
     def evaluate_nb_pawns(board,player):
-        player_pawns_nb = board.get_pawns_nb(False) if player == False else board.get_pawns_nb(True)
-        otherPly_pawns_nb =  board.get_pawns_nb(False) if not player == False else board.get_pawns_nb(True)
-        return player_pawns_nb - otherPly_pawns_nb
+        return board.get_pawns_nb(player) - board.get_pawns_nb(not player )
     
     @staticmethod
     def evaluate_nb_strokes(board,player):
@@ -101,8 +99,9 @@ class Strategy():
         for pos in Rules.movespossible(fake_state,self.player_max):
             fake_state.simulate_stroke(pos,self.player_max)
             score = self.alpha_beta_search(fake_state, -inf, inf, self.player_max, self.depth_max)
+            print(pos,score)
             fake_state.undo_move(pos)
-            if score > best_score or (best_move is None and (score == -inf or score == inf)) :
+            if score > best_score :
                 best_score = score
                 best_move = pos
         return best_move
