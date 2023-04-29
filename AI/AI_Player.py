@@ -52,35 +52,28 @@ class Strategy():
     
     @Utils.timer
     def alpha_beta_search(self,board,alpha,beta,current_player,depth):
-        
+        print(depth)
         if depth == 0 or board.isfull() : 
             return self.global_evaluate(board,current_player)
         
-        #Max
-        if current_player == self.player_max:
-            m = -inf
-            for move in Rules.movespossible(board,current_player):
-                board.simulate_stroke(move,current_player)
-                val = self.alpha_beta_search(board,alpha,beta,not current_player,depth-1)
-                board.undo_move(move)
-                m = max(m, val)
-                alpha = max(alpha,val)
-                if beta <= alpha:
-                    break
-            return m
-        
-        #Min
-        else:
-            m = inf
-            for move in Rules.movespossible(board,current_player):
-                board.simulate_stroke(move,current_player)
-                val = self.alpha_beta_search(board,alpha,beta,not current_player,depth-1)
-                board.undo_move(move)
-                m = min(m, val)
-                beta = min(beta,val)
-                if beta <= alpha:
-                    break
-            return m
+        m = -float('inf') if current_player == self.player_max else float('inf')
+        update_alpha_beta = max if current_player == self.player_max else min
+
+        for move in Rules.movespossible(board,current_player):
+            board.simulate_stroke(move,current_player)
+            val = self.alpha_beta_search(board,alpha,beta,not current_player,depth-1)
+            board.undo_move(move)
+            m = update_alpha_beta(m, val)
+            
+            if current_player == self.player_max: 
+                alpha = max(alpha, m) 
+                
+            else:
+                beta = min(beta, m)   
+                
+            if beta <= alpha:
+                break
+        return m
     
     @Utils.timer
     def get_best_move(self,state):

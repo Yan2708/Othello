@@ -39,6 +39,7 @@ class Utils:
         return inner
 
     def DrawBoard(surface, board, moves):
+        
         # Calcul de la position de l'échiquier pour le centrer sur l'écran
         board_x = (Utils.WINDOW_SIZE[0] - Utils.square_size * 8) // 2
         board_y = (Utils.WINDOW_SIZE[1] - Utils.square_size * 8) // 2
