@@ -5,7 +5,7 @@ Created on Sun Apr  2 23:33:44 2023
 @author: yniak
 """
 import pygame
-
+import time
 
 class Utils:
     # couleurs & taille
@@ -29,6 +29,14 @@ class Utils:
                 pygame.image.load('../Asset/disk/disk2.png'), pygame.image.load('../Asset/disk/disk3.png'),
                 pygame.image.load('../Asset/disk/disk4.png')]
     
+    def timer(func):
+        def inner(*args,**kwargs):
+            start = time.perf_counter()
+            result = func(*args,**kwargs)
+            end = time.perf_counter()
+            print(f"execution of {func.__name__} *************** in {end-start:0.4f} seconds")
+            return result
+        return inner
 
     def DrawBoard(surface, board, moves):
         # Calcul de la position de l'échiquier pour le centrer sur l'écran

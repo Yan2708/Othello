@@ -2,6 +2,7 @@ import Game.Rules as Rules
 from math import inf
 import copy
 import sys
+from GUI.utils import Utils
 #TODO: Set strategie
 class Strategy():
     def __init__(self,player_max,depth_max,weighting_nb_stroke,weighting_nb_pawns,weighting_position):
@@ -31,42 +32,30 @@ class Strategy():
     
     @staticmethod
     def evaluate_strenght_position(board,player):
-        return Strategy.check_strenght_position(board,player) - Strategy.check_strenght_position(board,not player)
-    
-    #TODO: ajouter les points au bordures
-    @staticmethod
-    def check_strenght_position(board,player):
         Sum_strenght = 0
         for x in range(8):
             for y in range(8):
                 current = (x,y)
-                if board.status[x][y] == player:
-                    if Rules.is_in_corner(current):
-                        Sum_strenght += 10
-                    elif Rules.checkadjacent_for_corner(current):
-                        Sum_strenght -=5
-                    elif Rules.is_in_border(current):
-                        Sum_strenght += 3
-                    else:
-                        Sum_strenght += 1
+                if Rules.is_in_corner(current):
+                    Sum_strenght = Sum_strenght+10 if board.status[x][y] == player else Sum_strenght-10
+                elif Rules.checkadjacent_for_corner(current):
+                    Sum_strenght = Sum_strenght-5 if board.status[x][y] == player else Sum_strenght+5
+                elif Rules.is_in_border(current):
+                    Sum_strenght = Sum_strenght+3 if board.status[x][y] == player else Sum_strenght-3
                 else:
-                    if Rules.is_in_corner(current):
-                        Sum_strenght -= 10
-                    elif Rules.checkadjacent_for_corner(current):
-                        Sum_strenght +=5
-                    elif Rules.is_in_border(current):
-                        Sum_strenght -= 3
-                    else:
-                        Sum_strenght -= 1
+                    Sum_strenght = Sum_strenght+1 if board.status[x][y] == player else Sum_strenght-1
         return Sum_strenght
     
 
     def global_evaluate(self,board,player):
         return Strategy.evaluate_nb_strokes(board,player)*self.weighting_nb_stroke+Strategy.evaluate_nb_pawns(board, player)*self.weighting_nb_pawns+Strategy.evaluate_strenght_position(board, player)*self.weighting_position
     
+    @Utils.timer
     def alpha_beta_search(self,board,alpha,beta,current_player,depth):
-        if depth == 0 or board.isfull() : #or len(Rules.movespossible(board,current_player))==1:
+        
+        if depth == 0 or board.isfull() : 
             return self.global_evaluate(board,current_player)
+        
         #Max
         if current_player == self.player_max:
             m = -inf
@@ -79,6 +68,7 @@ class Strategy():
                 if beta <= alpha:
                     break
             return m
+        
         #Min
         else:
             m = inf
@@ -91,7 +81,8 @@ class Strategy():
                 if beta <= alpha:
                     break
             return m
-
+    
+    @Utils.timer
     def get_best_move(self,state):
         best_score = -inf
         best_move = None
@@ -101,7 +92,7 @@ class Strategy():
             score = self.alpha_beta_search(fake_state, -inf, inf, self.player_max, self.depth_max)
             print(pos,score)
             fake_state.undo_move(pos)
-            if score > best_score :
+            if score > best_score or (best_move is None and (score == -inf or score == inf)) :
                 best_score = score
                 best_move = pos
         return best_move
