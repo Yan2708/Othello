@@ -7,6 +7,16 @@ from GUI.utils import Utils
 
 # TODO: Set strategie
 class Strategy():
+    BOARD_SCORE = [
+        [50, -50, 10, 10, 10, 10, -50, 50],
+        [-50, -50, 4, 4, 4, 4, -50, -50],
+        [10, 4, 1, 1, 1, 1, 4, 10],
+        [10, 4, 1, 1, 1, 1, 4, 10],
+        [10, 4, 1, 1, 1, 1, 4, 10],
+        [10, 4, 1, 1, 1, 1, 4, 10],
+        [-50, -50, 4, 4, 4, 4, -50, -50],
+        [50, -50, 10, 10, 10, 10, -50, 50],
+    ]
 
     def __init__(self, player_max, depth_max, weighting_nb_stroke, weighting_nb_pawns, weighting_position):
         self.player_max = player_max
@@ -37,15 +47,7 @@ class Strategy():
         Sum_strenght = 0
         for x in range(8):
             for y in range(8):
-                current = (x, y)
-                if Rules.is_in_corner(current):
-                    Sum_strenght += 10 if board.status[x][y] == player else -10
-                elif Rules.checkadjacent_for_corner(current):
-                    Sum_strenght += -5 if board.status[x][y] == player else 5
-                elif Rules.is_in_border(current):
-                    Sum_strenght += 3 if board.status[x][y] == player else -3
-                else:
-                    Sum_strenght += 1 if board.status[x][y] == player else -1
+                Sum_strenght += Strategy.BOARD_SCORE[x][y] if board.status[x][y] == player else -Strategy.BOARD_SCORE[x][y]
         return Sum_strenght
 
     def global_evaluate(self, board, player):
