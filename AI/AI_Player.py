@@ -3,6 +3,7 @@ from math import inf
 import copy
 import sys
 from GUI.utils import Utils
+import time
 #TODO: Set strategie
 class Strategy():
     def __init__(self,player_max,depth_max,weighting_nb_stroke,weighting_nb_pawns,weighting_position):
@@ -50,13 +51,11 @@ class Strategy():
     def global_evaluate(self,board,player):
         return Strategy.evaluate_nb_strokes(board,player)*self.weighting_nb_stroke+Strategy.evaluate_nb_pawns(board, player)*self.weighting_nb_pawns+Strategy.evaluate_strenght_position(board, player)*self.weighting_position
     
-    @Utils.timer
     def alpha_beta_search(self,board,alpha,beta,current_player,depth):
-        print(depth)
         if depth == 0 or board.isfull() : 
             return self.global_evaluate(board,current_player)
         
-        m = -float('inf') if current_player == self.player_max else float('inf')
+        m = -inf if current_player == self.player_max else inf
         update_alpha_beta = max if current_player == self.player_max else min
 
         for move in Rules.movespossible(board,current_player):
@@ -76,17 +75,22 @@ class Strategy():
         return m
     
     @Utils.timer
-    def get_best_move(self,state):
+    def get_best_move(self,state,time_limit): 
+        start_time = time.perf_counter()
         best_score = -inf
         best_move = None
         fake_state = copy.deepcopy(state)
-        for pos in Rules.movespossible(fake_state,self.player_max):
-            fake_state.simulate_stroke(pos,self.player_max)
-            score = self.alpha_beta_search(fake_state, -inf, inf, self.player_max, self.depth_max)
-            print(pos,score)
-            fake_state.undo_move(pos)
-            if score > best_score or (best_move is None and (score == -inf or score == inf)) :
-                best_score = score
-                best_move = pos
+        for depth in range(1,self.depth_max+1):
+            for pos in Rules.movespossible(fake_state,self.player_max):
+                fake_state.simulate_stroke(pos,self.player_max)
+                score = self.alpha_beta_search(fake_state, -inf, inf, self.player_max, depth)
+                print(pos,score,depth)
+                fake_state.undo_move(pos)
+                if score > best_score or (best_move is None and (score == -inf or score == inf)) :
+                    best_score = score
+                    best_move = pos
+                if time.perf_counter() - start_time > time_limit:
+                    break
+        print(best_move,best_score)
         return best_move
         
