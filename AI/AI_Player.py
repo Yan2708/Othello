@@ -12,6 +12,8 @@ class Strategy():
         self.weighting_nb_pawns = weighting_nb_pawns
         self.weighting_nb_stroke = weighting_nb_stroke
         self.weighting_position = weighting_position
+        #oprimisation part
+        self.transpoTable = {}
     
     
     def set_weighting_nb_pawns(self, value):
@@ -22,6 +24,10 @@ class Strategy():
     
     def set_weighting_position(self, value):
         self.weighting_position = value
+
+    #Usefull to optimisation
+    def getHashBoard(self,board):
+        return hash(str(board))
     
     @staticmethod
     def evaluate_nb_pawns(board,player):
@@ -52,8 +58,15 @@ class Strategy():
         return Strategy.evaluate_nb_strokes(board,player)*self.weighting_nb_stroke+Strategy.evaluate_nb_pawns(board, player)*self.weighting_nb_pawns+Strategy.evaluate_strenght_position(board, player)*self.weighting_position
     
     def alpha_beta_search(self,board,alpha,beta,current_player,depth):
-        if depth == 0 or board.isfull() : 
-            return self.global_evaluate(board,current_player)
+        
+        if depth == 0 or board.isfull() :
+            board_hash_key = self.getHashBoard(board)
+            if board_hash_key in self.transpoTable:
+                return self.transpoTable[board_hash_key]
+            else:
+                value_eval = self.global_evaluate(board,current_player)
+                self.transpoTable[board_hash_key] = value_eval
+                return value_eval
         
         m = -inf if current_player == self.player_max else inf
         update_alpha_beta = max if current_player == self.player_max else min
@@ -80,6 +93,7 @@ class Strategy():
         best_score = -inf
         best_move = None
         fake_state = copy.deepcopy(state)
+        
         for depth in range(1,self.depth_max+1):
             for pos in Rules.movespossible(fake_state,self.player_max):
                 fake_state.simulate_stroke(pos,self.player_max)

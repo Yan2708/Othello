@@ -27,14 +27,14 @@ class Bot(Player):
         self.strategy= Strategy(color,5,0.5,0.2,0.3)
 
     def play(self, moves):
-        if self.turn_nb >= 12 and self.turn_nb < 30:
-            self.strategy.set_weighting_nb_pawns(0.2)
+        if self.turn_nb >= 18 and self.turn_nb < 30:
+            self.strategy.set_weighting_nb_pawns(0.1)
             self.strategy.set_weighting_nb_stroke(0.1)
-            self.strategy.set_weighting_position(0.7)
+            self.strategy.set_weighting_position(0.8)
         elif self.turn_nb >= 30:
-            self.strategy.set_weighting_nb_pawns(0.8)
+            self.strategy.set_weighting_nb_pawns(0.7)
             self.strategy.set_weighting_nb_stroke(0.1)
-            self.strategy.set_weighting_position(0.1)
+            self.strategy.set_weighting_position(0.2)
             
         move = self.strategy.get_best_move(self.board,1.0)
         print("AI =>", move)
