@@ -31,7 +31,7 @@ class Strategy():
     
     @staticmethod
     def evaluate_nb_pawns(board,player):
-        return board.get_pawns_nb(player) - board.get_pawns_nb(not player )
+        return board.get_pawns_nb(player) - board.get_pawns_nb(not player)
     
     @staticmethod
     def evaluate_nb_strokes(board,player):
@@ -44,27 +44,27 @@ class Strategy():
             for y in range(8):
                 current = (x,y)
                 if Rules.is_in_corner(current):
-                    Sum_strenght = Sum_strenght+10 if board.status[x][y] == player else Sum_strenght-10
-                elif Rules.checkadjacent_for_corner(current):
-                    Sum_strenght = Sum_strenght-5 if board.status[x][y] == player else Sum_strenght+5
+                    Sum_strenght = Sum_strenght if board.status[x][y] == None else Sum_strenght+10 if board.status[x][y] == player else Sum_strenght-10
+                elif Rules.checkadjacent_for_corner(current) and Rules.get_adjacent_corner(current) == None:
+                    Sum_strenght = Sum_strenght if board.status[x][y] == None else Sum_strenght-5 if board.status[x][y] == player else Sum_strenght+5
                 elif Rules.is_in_border(current):
-                    Sum_strenght = Sum_strenght+3 if board.status[x][y] == player else Sum_strenght-3
+                    Sum_strenght = Sum_strenght if board.status[x][y] == None else Sum_strenght+3 if board.status[x][y] == player else Sum_strenght-3
                 else:
-                    Sum_strenght = Sum_strenght+1 if board.status[x][y] == player else Sum_strenght-1
+                    Sum_strenght = Sum_strenght if board.status[x][y] == None else Sum_strenght+1 if board.status[x][y] == player else Sum_strenght-1   
         return Sum_strenght
     
 
-    def global_evaluate(self,board,player):
-        return Strategy.evaluate_nb_strokes(board,player)*self.weighting_nb_stroke+Strategy.evaluate_nb_pawns(board, player)*self.weighting_nb_pawns+Strategy.evaluate_strenght_position(board, player)*self.weighting_position
+    def global_evaluate(self,board):
+        return Strategy.evaluate_nb_strokes(board,self.player_max)*self.weighting_nb_stroke+Strategy.evaluate_nb_pawns(board,self.player_max)*self.weighting_nb_pawns+Strategy.evaluate_strenght_position(board, self.player_max)*self.weighting_position
     
     def alpha_beta_search(self,board,alpha,beta,current_player,depth):
-        
         if depth == 0 or board.isfull() :
+            print(self.transpoTable)
             board_hash_key = self.getHashBoard(board)
             if board_hash_key in self.transpoTable:
                 return self.transpoTable[board_hash_key]
             else:
-                value_eval = self.global_evaluate(board,current_player)
+                value_eval = self.global_evaluate(board)
                 self.transpoTable[board_hash_key] = value_eval
                 return value_eval
         
@@ -103,6 +103,7 @@ class Strategy():
                 if score > best_score or (best_move is None and (score == -inf or score == inf)) :
                     best_score = score
                     best_move = pos
+                #print("curent time:",time.perf_counter() - start_time)
                 if time.perf_counter() - start_time > time_limit:
                     break
         print(best_move,best_score)

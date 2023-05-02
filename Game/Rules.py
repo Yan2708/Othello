@@ -35,6 +35,17 @@ def is_in_corner(position):
     if position in corner:
         return True
     return False
+
+def get_adjacent_corner(position):
+   x, y = position
+   corners = {(0, 0): [(1, 0), (0, 1)],
+              (0, 7): [(1, 7), (0, 6)],
+              (7, 0): [(6, 0), (7, 1)],
+              (7, 7): [(6, 7), (7, 6)]}
+   for corner, adjacent_positions in corners.items():
+       if (x, y) in adjacent_positions:
+           return corner
+    
 def is_in_border(position):
     if is_in_corner(position) == False:
         if position[0] == 0 or position[0] == 7:
