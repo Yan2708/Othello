@@ -54,17 +54,23 @@ class Strategy():
         return Sum_strenght
     
 
-    def global_evaluate(self,board):
-        return Strategy.evaluate_nb_strokes(board,self.player_max)*self.weighting_nb_stroke+Strategy.evaluate_nb_pawns(board,self.player_max)*self.weighting_nb_pawns+Strategy.evaluate_strenght_position(board, self.player_max)*self.weighting_position
+    def global_evaluate(self,board,player):
+        return Strategy.evaluate_nb_strokes(board,player)*self.weighting_nb_stroke+Strategy.evaluate_nb_pawns(board,player)*self.weighting_nb_pawns+Strategy.evaluate_strenght_position(board,player)*self.weighting_position
+    
+    @staticmethod
+    def estimate_move_quality(board,move,player):
+        board.simulate_stroke(move, player)
+        quality = board.get_pawns_nb(player) - board.get_pawns_nb(not player)
+        board.undo_move(move)
+        return quality
     
     def alpha_beta_search(self,board,alpha,beta,current_player,depth):
         if depth == 0 or board.isfull() :
-            print(self.transpoTable)
             board_hash_key = self.getHashBoard(board)
             if board_hash_key in self.transpoTable:
                 return self.transpoTable[board_hash_key]
             else:
-                value_eval = self.global_evaluate(board)
+                value_eval = self.global_evaluate(board,current_player)
                 self.transpoTable[board_hash_key] = value_eval
                 return value_eval
         
@@ -76,13 +82,10 @@ class Strategy():
             val = self.alpha_beta_search(board,alpha,beta,not current_player,depth-1)
             board.undo_move(move)
             m = update_alpha_beta(m, val)
-            
             if current_player == self.player_max: 
                 alpha = max(alpha, m) 
-                
             else:
                 beta = min(beta, m)   
-                
             if beta <= alpha:
                 break
         return m
@@ -94,8 +97,11 @@ class Strategy():
         best_move = None
         fake_state = copy.deepcopy(state)
         
+        possible_moves = Rules.movespossible(fake_state, self.player_max)
+        sorted_moves = sorted(possible_moves, key=lambda move: Strategy.estimate_move_quality(fake_state, move, self.player_max), reverse=True)
+        
         for depth in range(1,self.depth_max+1):
-            for pos in Rules.movespossible(fake_state,self.player_max):
+            for pos in sorted_moves:
                 fake_state.simulate_stroke(pos,self.player_max)
                 score = self.alpha_beta_search(fake_state, -inf, inf, self.player_max, depth)
                 print(pos,score,depth)
@@ -103,7 +109,6 @@ class Strategy():
                 if score > best_score or (best_move is None and (score == -inf or score == inf)) :
                     best_score = score
                     best_move = pos
-                #print("curent time:",time.perf_counter() - start_time)
                 if time.perf_counter() - start_time > time_limit:
                     break
         print(best_move,best_score)
