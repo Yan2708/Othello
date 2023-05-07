@@ -7,7 +7,8 @@ Created on Mon Apr  3 20:35:15 2023
 import pygame
 from abc import ABC, abstractmethod
 from GUI.utils import Utils
-
+from AI.AI_Player import Strategy
+import time
 
 class Player(ABC):
     def __init__(self, color):
@@ -19,13 +20,25 @@ class Player(ABC):
 
 
 class Bot(Player):
-    def __init__(self, color):
+    def __init__(self,color,board,turn_nb):
         super().__init__(color)
-        #TODO: Set strategie
-        self.strategy=None
+        self.turn_nb = turn_nb
+        self.board = board
+        self.strategy= Strategy(color,4,0.5,0.2,0.3)
 
     def play(self, moves):
-        return moves[0]
+        if self.turn_nb >= 18 and self.turn_nb < 35:
+            self.strategy.set_weighting_nb_pawns(0.2)
+            self.strategy.set_weighting_nb_stroke(0.1)
+            self.strategy.set_weighting_position(0.7)
+        elif self.turn_nb >= 35:
+            self.strategy.set_weighting_nb_pawns(0.7)
+            self.strategy.set_weighting_nb_stroke(0.1)
+            self.strategy.set_weighting_position(0.2)
+            
+        move = self.strategy.get_best_move(self.board,1.0)
+        print("AI =>", move)
+        return move
 
 
 class Real(Player):

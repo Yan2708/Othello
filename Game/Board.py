@@ -8,12 +8,12 @@ import numpy as np
 
 class Board:
     BOARD_SIZE = 8
-    DIRECTIONS = [(i, j) for j in range(-1, 2) for i in range(-1, 2) if not (i == 0 == j)]
+    DIRECTIONS = np.array([(i, j) for j in range(-1, 2) for i in range(-1, 2) if not (i == 0 == j)])
 
     def __init__(self):
         self.status = None
         self.initboard()
-
+    
     def initboard(self):
         b = np.full((Board.BOARD_SIZE, Board.BOARD_SIZE), None)
         b[3][3], b[4][4], b[3][4], b[4][3] = True, True, False, False
@@ -61,8 +61,27 @@ class Board:
         return None not in self.status
 
     def have(self, color):
-        return color in self.status
+        for i in range(Board.BOARD_SIZE):
+            for j in range(Board.BOARD_SIZE):
+                if self.status[i][j] == color:
+                    return True
+        return False
+    
+    def simulate_stroke(self,move,player):
+         self.status[move[0]][move[1]] = player
+    
+    def undo_move(self,move):
+        self.status[move[0]][move[1]] = None
 
+    def get_black_pawns_nb(self):
+        return sum(line.count(False) for line in self.status)
+    
+    def get_white_pawns_nb(self):
+        return sum(line.count(True) for line in self.status)
+
+    def get_pawns_nb(self,color):
+        return np.count_nonzero(self.status == color)
+    
     def __str__(self):
         return '\n'.join([str(i) for i in self.status])
 
