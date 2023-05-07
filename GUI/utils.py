@@ -71,4 +71,33 @@ class Utils:
         surface.blit(Utils.disk[4], (195, 360))
         surface.blit(Blk_txt, (290, 270))
         surface.blit(Wht_txt, (290, 375))
+    
+    def DrawPass(surface,font_Pass):
+        pass_message = font_Pass.render("PASS", True, Utils.black)
+        pass_message_rect = pass_message.get_rect(center=(surface.get_width() // 2, 150 // 2))
+        surface.blit(pass_message, pass_message_rect)
+        pygame.display.flip()
+        pygame.time.delay(2000)
+        Utils.fade_out(surface, pass_message, pass_message_rect, 50, Utils.gainsboro)
+        
+    def fade_out(surface, message, rect, duration, color):
+        for i in range(255, 0, -10):
+            message.set_alpha(i)
+            surface.fill(color)
+            surface.blit(message, rect)
+            pygame.display.update(rect)
+            pygame.time.delay(duration)        
+        
+    def DrawResult(surface, font, match, Utils, Blk_txt, Wht_txt):
+        W = font.render("WHITES WIN THO !", True, Utils.white)
+        B = font.render("BLACKS WIN THO !", True, Utils.white)
+        T = font.render("IT'S A TIE THO !", True, Utils.white)
+        Winner = W if match.count_pawns()[0] > match.count_pawns()[1] else B if match.count_pawns()[0] < match.count_pawns()[1] else T
+        surface.fill(Utils.grey)
+        surface.blit(Winner, (500, 160))
+        surface.blit(Utils.disk[0], (540, 260))
+        surface.blit(Utils.disk[4], (540, 360))
+        surface.blit(Blk_txt, (620, 273))
+        surface.blit(Wht_txt, (620, 375))
+    
 

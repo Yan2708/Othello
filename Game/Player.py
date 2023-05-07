@@ -24,7 +24,7 @@ class Bot(Player):
         super().__init__(color)
         self.turn_nb = turn_nb
         self.board = board
-        self.strategy= Strategy(color,4,0.5,0.2,0.3)
+        self.strategy= Strategy(color,2,0.5,0.2,0.3)
 
     def play(self, moves):
         if self.turn_nb >= 18 and self.turn_nb < 35:

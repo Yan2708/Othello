@@ -8,13 +8,22 @@ import time
 
 # TODO: Set strategie
 class Strategy():
+    BOARD_SCORE = [
+        [50, -50, 10, 10, 10, 10, -50, 50],
+        [-50, -50, 4, 4, 4, 4, -50, -50],
+        [10, 4, 1, 1, 1, 1, 4, 10],
+        [10, 4, 1, 1, 1, 1, 4, 10],
+        [10, 4, 1, 1, 1, 1, 4, 10],
+        [10, 4, 1, 1, 1, 1, 4, 10],
+        [-50, -50, 4, 4, 4, 4, -50, -50],
+        [50, -50, 10, 10, 10, 10, -50, 50],
+    ]
     def __init__(self, player_max, depth_max, weighting_nb_stroke, weighting_nb_pawns, weighting_position):
         self.player_max = player_max
         self.depth_max = depth_max
         self.weighting_nb_pawns = weighting_nb_pawns
         self.weighting_nb_stroke = weighting_nb_stroke
         self.weighting_position = weighting_position
-        # oprimisation part
         self.transpoTable = {}
 
     def set_weighting_nb_pawns(self, value):
@@ -25,7 +34,7 @@ class Strategy():
 
     def set_weighting_position(self, value):
         self.weighting_position = value
-
+        
     # Usefull to optimisation
     def getHashBoard(self, board):
         return hash(str(board))
@@ -43,26 +52,14 @@ class Strategy():
         Sum_strenght = 0
         for x in range(8):
             for y in range(8):
-                current = (x, y)
-                if Rules.is_in_corner(current):
-                    Sum_strenght = Sum_strenght if board.status[x][y] == None else Sum_strenght + 10 if board.status[x][
-                                                                                                            y] == player else Sum_strenght - 10
-                elif Rules.checkadjacent_for_corner(current) and Rules.get_adjacent_corner(current) == None:
-                    Sum_strenght = Sum_strenght if board.status[x][y] == None else Sum_strenght - 5 if board.status[x][
-                                                                                                           y] == player else Sum_strenght + 5
-                elif Rules.is_in_border(current):
-                    Sum_strenght = Sum_strenght if board.status[x][y] == None else Sum_strenght + 3 if board.status[x][
-                                                                                                           y] == player else Sum_strenght - 3
-                else:
-                    Sum_strenght = Sum_strenght if board.status[x][y] == None else Sum_strenght + 1 if board.status[x][
-                                                                                                           y] == player else Sum_strenght - 1
+                Sum_strenght += Strategy.BOARD_SCORE[x][y] if board.status[x][y] == player else -Strategy.BOARD_SCORE[x][y]
         return Sum_strenght
 
     def global_evaluate(self, board, player):
-        return Strategy.evaluate_nb_strokes(board, player) * self.weighting_nb_stroke + Strategy.evaluate_nb_pawns(
-            board, player) * self.weighting_nb_pawns + Strategy.evaluate_strenght_position(board,
-                                                                                           player) * self.weighting_position
-
+        return Strategy.evaluate_nb_strokes(board, player) * self.weighting_nb_stroke + \
+            Strategy.evaluate_nb_pawns(board, player) * self.weighting_nb_pawns + \
+            Strategy.evaluate_strenght_position(board, player) * self.weighting_position
+      
     @staticmethod
     def estimate_move_quality(board, move, player):
         board.simulate_stroke(move, player)
@@ -71,6 +68,7 @@ class Strategy():
         return quality
 
     def alpha_beta_search(self, board, alpha, beta, current_player, depth):
+        
         if depth == 0 or board.isfull():
             board_hash_key = self.getHashBoard(board)
             if board_hash_key in self.transpoTable:
@@ -79,7 +77,7 @@ class Strategy():
                 value_eval = self.global_evaluate(board, current_player)
                 self.transpoTable[board_hash_key] = value_eval
                 return value_eval
-
+            
         m = -inf if current_player == self.player_max else inf
         update_alpha_beta = max if current_player == self.player_max else min
 
@@ -88,10 +86,12 @@ class Strategy():
             val = self.alpha_beta_search(board, alpha, beta, not current_player, depth - 1)
             board.undo_move(move)
             m = update_alpha_beta(m, val)
+            
             if current_player == self.player_max:
                 alpha = max(alpha, m)
             else:
                 beta = min(beta, m)
+                
             if beta <= alpha:
                 break
         return m
@@ -113,6 +113,7 @@ class Strategy():
                 fake_state.simulate_stroke(pos, self.player_max)
                 score = self.alpha_beta_search(fake_state, -inf, inf, self.player_max, depth)
                 fake_state.undo_move(pos)
+                print(pos,score,depth)
                 if score > best_score or (best_move is None and (score == -inf or score == inf)):
                     best_score = score
                     best_move = pos
