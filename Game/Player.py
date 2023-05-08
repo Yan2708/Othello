@@ -10,24 +10,29 @@ from GUI.utils import Utils
 from AI.AI_Player import Strategy
 import time
 
+
 class Player(ABC):
     def __init__(self, color):
         self.color = color
 
     @abstractmethod
     def play(self):
+        """
+        :return: coup choisi par le joueur
+        """
         pass
 
 
 class Bot(Player):
-    def __init__(self,color,board,turn_nb):
+    def __init__(self, color, board, turn_nb):
         super().__init__(color)
         self.turn_nb = turn_nb
         self.board = board
-        self.strategy= Strategy(color,2,0.5,0.2,0.3)
+        self.strategy = Strategy(color, 4, 0.5, 0.2, 0.3)
 
     def play(self, moves):
-        if self.turn_nb >= 18 and self.turn_nb < 35:
+        # redefinition des poids selon l'avancement de la partie
+        if 18 <= self.turn_nb < 35:
             self.strategy.set_weighting_nb_pawns(0.2)
             self.strategy.set_weighting_nb_stroke(0.1)
             self.strategy.set_weighting_position(0.7)
@@ -35,8 +40,8 @@ class Bot(Player):
             self.strategy.set_weighting_nb_pawns(0.7)
             self.strategy.set_weighting_nb_stroke(0.1)
             self.strategy.set_weighting_position(0.2)
-            
-        move = self.strategy.get_best_move(self.board,1.0)
+
+        move = self.strategy.get_best_move(self.board, 1.0)
         print("AI =>", move)
         return move
 
@@ -44,7 +49,7 @@ class Bot(Player):
 class Real(Player):
     def __init__(self, color):
         super().__init__(color)
-    
+
     def play(self, moves):
         # Calcul de la position de l'échiquier pour le centrer sur l'écran
         board_x = (Utils.WINDOW_SIZE[0] - Utils.square_size * 8) // 2

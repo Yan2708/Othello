@@ -7,7 +7,9 @@ import numpy as np
 
 
 class Board:
+    # taille de l'echiquier
     BOARD_SIZE = 8
+    # les 8 vecteurs de direction possibles
     DIRECTIONS = np.array([(i, j) for j in range(-1, 2) for i in range(-1, 2) if not (i == 0 == j)])
 
     def __init__(self):
@@ -15,12 +17,20 @@ class Board:
         self.initboard()
     
     def initboard(self):
+        """
+        initialise l'echiquier pour un debut de partie normale
+        """
         b = np.full((Board.BOARD_SIZE, Board.BOARD_SIZE), None)
         b[3][3], b[4][4], b[3][4], b[4][3] = True, True, False, False
         self.status = b
 
-    # Place un pion + flip
     def change(self, x, y, p):
+        """
+        pose une piece sur l'echiquier et retourne celles qui doivent l'etre
+        :param x: coord x
+        :param y: coord y
+        :param p: le joueur
+        """
         self.status[x][y] = p
         for i, j in Board.DIRECTIONS:
             vsize = Board.vectorsize(self, [i, j], x, y, p)
@@ -28,6 +38,14 @@ class Board:
                 self.flip((i, j), vsize, x, y, p)
 
     def flip(self, vector, vsize, x, y, p):
+        """
+        retourne toute les pieces selon le vecteur donne et la position de depart
+        :param vector: la direction des pions a retourner
+        :param vsize: le nombre de pions a retourner
+        :param x: coord x
+        :param y: coord y
+        :param p: le joueur
+        """
         x += vector[0]
         y += vector[1]
         while vsize > 0:
@@ -38,6 +56,14 @@ class Board:
 
     @staticmethod
     def flips(board, x, y, p):
+        """
+        determine si une piece (x,y) retourne des pieces sur l'echiquier
+        :param board: l'echiquier
+        :param x: coord x
+        :param y: coord y
+        :param p: le joueur
+        :return:
+        """
         for i, j in Board.DIRECTIONS:
             size = Board.vectorsize(board, [i, j], x, y, p)
             if size and size > 0:
@@ -46,6 +72,15 @@ class Board:
 
     @staticmethod
     def vectorsize(board, vector, x, y, p):
+        """
+        determine le nombre de pieces a retourner
+        :param board: la partie
+        :param vector: lea direction
+        :param x: coord x
+        :param y: coord y
+        :param p: le joueur
+        :return:
+        """
         d = 0
         x += vector[0]
         y += vector[1]
@@ -58,9 +93,16 @@ class Board:
         return None
 
     def isfull(self):
+        """
+        :return: si l'echiquier est plein ou non
+        """
         return None not in self.status
 
     def have(self, color):
+        """
+        :param color: couleur a verifier
+        :return: si la couleur est presente sur l'echiquier
+        """
         for i in range(Board.BOARD_SIZE):
             for j in range(Board.BOARD_SIZE):
                 if self.status[i][j] == color:
@@ -68,18 +110,25 @@ class Board:
         return False
     
     def simulate_stroke(self,move,player):
-         self.status[move[0]][move[1]] = player
+        """
+        simule la pose d'un pion
+        :param move: coup a jouer
+        :param player: le joueur
+        """
+        self.status[move[0]][move[1]] = player
     
     def undo_move(self,move):
+        """
+        enleve le coup joue
+        :param move:
+        """
         self.status[move[0]][move[1]] = None
 
-    def get_black_pawns_nb(self):
-        return sum(line.count(False) for line in self.status)
-    
-    def get_white_pawns_nb(self):
-        return sum(line.count(True) for line in self.status)
-
     def get_pawns_nb(self,color):
+        """
+        :param color: la couleur des pions recherches
+        :return: le nombre de pions de cette couleur
+        """
         return np.count_nonzero(self.status == color)
     
     def __str__(self):
