@@ -9,10 +9,22 @@ import numpy as np
 
 
 def isplayable(board, x, y, p):
+    """
+    :param board: la partie
+    :param x: coord x
+    :param y: coord y
+    :param p: le joueur
+    :return: True si un coup est possible sinon False
+    """
     return board.status[x][y] is None and checkadjacent(board, x, y, not p) and Board.flips(board, x, y, p)
 
 
 def movespossible(board, p):
+    """
+    :param board: la partie
+    :param p: le joueur
+    :return: une liste des coups possibles
+    """
     t = []
     for i in range(8):
         for j in range(8):
@@ -21,47 +33,18 @@ def movespossible(board, p):
     return t
 
 
-def is_in_corner(position):
-    corner = np.array([(0, 0), (0, 7), (7, 7), (7, 0)])
-    if position in corner:
-        return True
-    return False
-
-       
-def is_in_border(position):
-    if is_in_corner(position) == False:
-        if position[0] == 0 or position[0] == 7:
-            return True
-        elif position[1] == 0 or position[1] == 7:
-            return True
-    return False
-
 def checkadjacent(board, x, y, p):
-    positions_adjacentes = np.array([(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)])
-    for i, j in positions_adjacentes:
+    """
+    :param board: la partie
+    :param x: coord x
+    :param y: coord y
+    :param p: le joueur adverse
+    :return: True si le pion est adjacent a au moins une piece enemie sinon False
+    """
+    for i, j in Board.DIRECTIONS:
         try:
             if board.status[x + i][y + j] == p:
                 return True
         except:
             pass
     return False
-
-def get_adjacent_corner(position):
-   x, y = position
-   corners = {(0, 0): [(1, 0), (0, 1)],
-              (0, 7): [(1, 7), (0, 6)],
-              (7, 0): [(6, 0), (7, 1)],
-              (7, 7): [(6, 7), (7, 6)]}
-   for corner, adjacent_positions in corners.items():
-       if (x, y) in adjacent_positions:
-           return corner
-       
-def checkadjacent_for_corner(p):
-    corner = np.array([(0, 0), (0, 7), (7, 7), (7, 0)])
-    is_adj = False
-    for t in corner:
-        if t[0] == p[0] and abs(t[1] - p[1]) == 1 or t[1] == p[1] and abs(t[0] - p[0]) == 1:
-            is_adj == True
-        if is_adj:
-            break
-    return is_adj

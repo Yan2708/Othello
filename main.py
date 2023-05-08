@@ -24,13 +24,11 @@ surface: Optional['pygame.Surface'] = None
 def set_gm(value, gm):
     global GM
     GM = gm
-    print(GM)
 
 
 def set_color(value, gm):
     global COLOR
     COLOR = gm
-    print(COLOR)
 
 
 def play(font: 'pygame.font.Font'):
@@ -74,25 +72,30 @@ def play(font: 'pygame.font.Font'):
             match.set_moves()
             Utils.DrawBoard(surface, match.board, match.moves)
             pygame.display.update()
+
             if not match.isfinished:
                 if match.board.isfull() or not match.board.have(match.current.color) or match.turns_nb == 60:
                     match.isfinished = True
                     continue
                 if len(match.moves) > 0:
+                    # coup du joueur
                     coord = match.current.play(match.moves)
                     if isinstance(coord, int) and coord == pygame.K_ESCAPE:
                         is_paused = not is_paused
                         continue
                     match.board.change(coord[0], coord[1], match.current.color)
                     Wht_Nb, Blk_Nb = match.count_pawns()
-                    Blk_txt, Wht_txt = font_2.render(str(Blk_Nb), True, Utils.black), font_2.render(str(Wht_Nb), True,                                                                       Utils.black)
+                    Blk_txt, Wht_txt = font_2.render(str(Blk_Nb), True, Utils.black), font_2.render(str(Wht_Nb), True,
+                                                                                                    Utils.black)
                     pause_menu.enable()
                     pygame.display.flip()
                 else:
-                    Utils.DrawPass(surface, font_Pass)    
+                    # aucun coup possible il doit passer sont tour
+                    Utils.DrawPass(surface, font_Pass)
                 match.turns_nb += 1
                 match.switchplayer()
             else:
+                # ecran de fin de partie
                 Utils.DrawResult(surface, font, match, Utils, Blk_txt, Wht_txt)
                 surface.blit(font_3.render("Press a key for main menu...", True, Utils.white2), (10, 650))
                 pygame.display.flip()
@@ -109,8 +112,6 @@ def play(font: 'pygame.font.Font'):
         pygame.display.update()
 
 
-
-
 def removePause(r=False):
     global is_paused
     global restart
@@ -118,10 +119,12 @@ def removePause(r=False):
     restart = r
     pause_menu.disable()
 
+
 def returnFunc():
     global returning
     returning = True
     removePause()
+
 
 def pause():
     paused = True
