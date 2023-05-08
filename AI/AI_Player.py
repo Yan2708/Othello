@@ -169,6 +169,7 @@ class Strategy():
                 toFlip = fake_state.change(pos[0], pos[1], self.player_max)
                 score = self.alpha_beta_search(fake_state, -inf, inf, self.player_max, depth)
                 fake_state.undo_change(pos[0], pos[1],toFlip)
+
                 print(pos,score,depth,"current best =>",best_move,best_score)
                 if score > best_score:
                     best_score = score
