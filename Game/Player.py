@@ -28,11 +28,7 @@ class Bot(Player):
         super().__init__(color)
         self.turn_nb = turn_nb
         self.board = board
-<<<<<<< HEAD
-        self.strategy= Strategy(color,5,0.5,0.2,0.3)
-=======
-        self.strategy = Strategy(color, 4, 0.5, 0.2, 0.3)
->>>>>>> e61ed55d68d03d4e20d0677d9147a234c255a01e
+        self.strategy = Strategy(color, 5, 0.5, 0.2, 0.3)
 
     def play(self, moves):
         # redefinition des poids selon l'avancement de la partie
