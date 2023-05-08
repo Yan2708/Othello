@@ -22,19 +22,29 @@ class Board:
     # Place un pion + flip
     def change(self, x, y, p):
         self.status[x][y] = p
+        flipped_positions = []
         for i, j in Board.DIRECTIONS:
             vsize = Board.vectorsize(self, [i, j], x, y, p)
             if vsize and vsize > 0:
-                self.flip((i, j), vsize, x, y, p)
+                flipped_positions.extend(self.flip((i, j), vsize, x, y, p))
+        return flipped_positions
+    
+    def undo_change(self,x,y,flip_p):
+        self.status[x][y] = None
+        for xbis, ybis in flip_p:
+            self.status[xbis][ybis] = not self.status[xbis][ybis]
 
     def flip(self, vector, vsize, x, y, p):
         x += vector[0]
         y += vector[1]
+        flipped_positions = []
         while vsize > 0:
             self.status[x][y] = p
             x += vector[0]
             y += vector[1]
             vsize -= 1
+            flipped_positions.append((x,y))
+        return flipped_positions
 
     @staticmethod
     def flips(board, x, y, p):
@@ -67,11 +77,7 @@ class Board:
                     return True
         return False
     
-    def simulate_stroke(self,move,player):
-         self.status[move[0]][move[1]] = player
-    
-    def undo_move(self,move):
-        self.status[move[0]][move[1]] = None
+
 
     def get_black_pawns_nb(self):
         return sum(line.count(False) for line in self.status)
