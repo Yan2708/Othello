@@ -78,7 +78,8 @@ class Strategy():
         Sum_strenght = 0
         for x in range(8):
             for y in range(8):
-                Sum_strenght += Strategy.BOARD_SCORE[x][y] if board.status[x][y] == player else -Strategy.BOARD_SCORE[x][y]
+                Sum_strenght += Strategy.BOARD_SCORE[x][y] \
+                if board.status[x][y] == player else -Strategy.BOARD_SCORE[x][y]
         return Sum_strenght
 
     def global_evaluate(self, board, player):
@@ -156,21 +157,20 @@ class Strategy():
         best_score = -inf
         best_move = None
         fake_state = copy.deepcopy(state)
-
         possible_moves = Rules.movespossible(fake_state, self.player_max)
-
         # tri des coups selon la qualite estime des coups
         sorted_moves = sorted(possible_moves,
-                              key=lambda move: Strategy.estimate_move_quality(fake_state, move, self.player_max),
-                              reverse=True)
-
+                              key=lambda move:\
+                                  Strategy.estimate_move_quality(fake_state, move,\
+                                                                 self.player_max), 
+                                        reverse=True)
         for depth in range(1, self.depth_max + 1):
             for pos in sorted_moves:
                 toFlip = fake_state.change(pos[0], pos[1], self.player_max)
                 score = self.alpha_beta_search(fake_state, -inf, inf, self.player_max, depth)
                 fake_state.undo_change(pos[0], pos[1],toFlip)
                 print(pos,score,depth,"current best =>",best_move,best_score)
-                if score > best_score or (best_move is None and (score == -inf or score == inf)):
+                if score > best_score:
                     best_score = score
                     best_move = pos
                 if time.perf_counter() - start_time > time_limit:
